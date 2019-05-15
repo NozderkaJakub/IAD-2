@@ -27,6 +27,7 @@ public class Neuron {
 				+ Math.pow((this.weight.get(1) - neuron.weight.get(1)), 2));
 	}
 
+
 	@Override
 	public String toString() {
 		return weight.get(0) + ";" + weight.get(1);

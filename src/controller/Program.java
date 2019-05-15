@@ -28,34 +28,45 @@ public abstract class Program {
 		savePoints();
 		initCenters(noOfCenters);
 	}
-	
+
 	protected abstract void changeCenterCoords(double[] point, int kx);
-	
+
 	public void algorithm() {
 		List<Integer> occurs = new ArrayList<Integer>();
 		printCentra();
 
-		for (int i = 0; i < points.length; i++) {
-			int centro = 0;
-			while (checkIfOccurs(occurs)) {
-				shuffle = ThreadLocalRandom.current().nextInt(0, 200);
-			}
-			occurs.add(shuffle);
+		double error = 0, oldError = 0;
 
-			for (int j = 0; j < neurons.size() - 1; j++) {
-				if (neurons.get(j).checkDistance(points[shuffle]) < neurons.get(j + 1).checkDistance(points[shuffle])) {
-					if (neurons.get(j).checkDistance(points[shuffle]) < neurons.get(centro)
-							.checkDistance(points[shuffle]))
-						centro = j;
-				} else {
-					if (neurons.get(j + 1).checkDistance(points[shuffle]) < neurons.get(centro)
-							.checkDistance(points[shuffle]))
-						centro = j + 1;
+		do{
+			oldError = error;
+			error = 0;
+			for (int i = 0; i < points.length; i++) {
+				int centro = 0;
+				while (checkIfOccurs(occurs)) {
+					shuffle = ThreadLocalRandom.current().nextInt(0, 200);
 				}
+				occurs.add(shuffle);
+
+				for (int j = 0; j < neurons.size() - 1; j++) {
+					if (neurons.get(j).checkDistance(points[shuffle]) < neurons.get(j + 1)
+							.checkDistance(points[shuffle])) {
+						if (neurons.get(j).checkDistance(points[shuffle]) < neurons.get(centro)
+								.checkDistance(points[shuffle]))
+							centro = j;
+					} else {
+						if (neurons.get(j + 1).checkDistance(points[shuffle]) < neurons.get(centro)
+								.checkDistance(points[shuffle]))
+							centro = j + 1;
+					}
+				}
+				error += quantisationError(points[shuffle]);
+				changeCenterCoords(points[shuffle], centro);
+				printCentra();
 			}
-			changeCenterCoords(points[shuffle], centro);
-			printCentra();
-		}
+			occurs.clear();
+			error /= points.length;
+			//System.out.println(error);
+		} while (Math.abs(oldError - error) > 0.001); 
 	}
 
 	protected boolean checkIfOccurs(List<Integer> occur) {
@@ -121,7 +132,15 @@ public abstract class Program {
 
 		out.close();
 	}
-	
+
+	public double quantisationError(double point[]) {
+		double sum = 0;
+		for (int i = 0; i < neurons.size(); i++) {
+			sum += neurons.get(i).checkDistance(point);
+		}
+		return sum / neurons.size();
+	}
+
 	public void printCentra() {
 		neurons.forEach(System.out::println);
 	}
