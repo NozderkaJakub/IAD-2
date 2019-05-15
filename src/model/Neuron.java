@@ -26,4 +26,10 @@ public class Neuron {
 		return Math.sqrt(Math.pow((this.weight.get(0) - neuron.weight.get(0)), 2)
 				+ Math.pow((this.weight.get(1) - neuron.weight.get(1)), 2));
 	}
+
+	@Override
+	public String toString() {
+		return weight.get(0) + ";" + weight.get(1);
+	}
+	
 }

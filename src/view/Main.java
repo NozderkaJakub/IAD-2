@@ -14,13 +14,12 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		Program program;
 		if (args[0].equals(new String("WTA"))) {
-			program = new WTA(2, 3, 0, 2, 100);
+			program = new WTA(2, 3, 0, 10, 100);
 		} else if (args[0].equals(new String("WTM"))) {
 			program = new WTM(2, 3, 0, 10, 100);
 		} else {
 			program = new NeuralGas(2, 3, 0, 10, 100);
 		}
-		System.out.println("to jest to");
 		program.algorithm();
 
 	}

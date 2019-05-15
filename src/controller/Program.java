@@ -33,6 +33,7 @@ public abstract class Program {
 	
 	public void algorithm() {
 		List<Integer> occurs = new ArrayList<Integer>();
+		printCentra();
 
 		for (int i = 0; i < points.length; i++) {
 			int centro = 0;
@@ -53,6 +54,7 @@ public abstract class Program {
 				}
 			}
 			changeCenterCoords(points[shuffle], centro);
+			printCentra();
 		}
 	}
 
@@ -118,5 +120,9 @@ public abstract class Program {
 		}
 
 		out.close();
+	}
+	
+	public void printCentra() {
+		neurons.forEach(System.out::println);
 	}
 }
