@@ -18,8 +18,10 @@ public class Main {
 		} else if (args[0].equals(new String("WTM"))) {
 			program = new WTM(2, 3, 0, 10, 100);
 		} else {
-			program = new NeuralGas(2, 3, 0, 2, 100);
+			program = new NeuralGas(2, 3, 0, 10, 100);
 		}
+		System.out.println("to jest to");
+		program.algorithm();
 
 	}
 
