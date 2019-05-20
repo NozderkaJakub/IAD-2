@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.Math;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
@@ -19,16 +19,20 @@ public abstract class Program {
 	protected double alpha;
 	protected int shuffle;
 	protected double lambda;
+	protected Vector<Vector<Double>> distance;
+	protected Vector<Double> errors;
 
 	public Program(int radius, int centerX, int centerY, int noOfCenters, int noOfPoints) throws IOException {
-		points = new double[200][2];
+		points = new double[noOfPoints * 2][2];
 		neurons = new ArrayList<Neuron>();
 		alpha = 0.1;
 		lambda = 3.0;
-		shuffle = ThreadLocalRandom.current().nextInt(0, 200);
+		shuffle = ThreadLocalRandom.current().nextInt(0, noOfPoints *  2);
 		generateRandomPointsInCircle(radius, centerX, centerY, noOfPoints);
 		savePoints();
 		initCenters(noOfCenters);
+		distance = new Vector<Vector<Double>>();
+		errors = new Vector<>();
 	}
 
 	protected abstract void changeCenterCoords(double[] point, int kx);
@@ -36,13 +40,12 @@ public abstract class Program {
 	public void algorithm() {
 		List<Integer> occurs = new ArrayList<Integer>();
 		printCentra();
+		double error = 0;
+		double oldError = 0;
 
-		double error = 0, oldError = 0;
-
-		do{
+		do {
 			oldError = error;
-			error += quantisationError(points[shuffle]);
-			error = 0;
+			error = quantisationError();
 			for (int i = 0; i < points.length; i++) {
 				int centro = 0;
 				while (checkIfOccurs(occurs)) {
@@ -62,14 +65,13 @@ public abstract class Program {
 							centro = j + 1;
 					}
 				}
-				
+
 				changeCenterCoords(points[shuffle], centro);
 				printCentra();
 			}
 			occurs.clear();
-			error /= points.length;
-			//System.out.println(error);
-		} while (Math.abs(oldError - error) > 0.001); 
+		} while (Math.abs(error - oldError) > 0.0001);
+		saveError();
 	}
 
 	protected boolean checkIfOccurs(List<Integer> occur) {
@@ -114,8 +116,8 @@ public abstract class Program {
 
 			a = Math.random() * 2 * Math.PI;
 			r = R * Math.sqrt(Math.random());
-			points[100 + i][0] = r * Math.cos(a) - OX;
-			points[100 + i][1] = r * Math.sin(a) + OY;
+			points[noOfPoints + i][0] = r * Math.cos(a) - OX;
+			points[noOfPoints + i][1] = r * Math.sin(a) + OY;
 		}
 	}
 
@@ -136,13 +138,17 @@ public abstract class Program {
 		out.close();
 	}
 
-	public double quantisationError(double point[]) {
+	public double quantisationError() {
 		double sum = 0;
-		for (int i = 0; i < neurons.size(); i++) {
-			sum += neurons.get(i).checkDistance(point);
+		for (int i = 0; i < points.length; i++) {
+			checkDistanceToPoint(points[i]);
+			sum += distance.get(0).get(0);
 		}
-		return sum / neurons.size();
+		sum /= points.length;
+		errors.add(sum);
+		return sum;
 	}
+
 	public double lambda() {
 		if (lambda <= 0.1003)
 			return 0.1;
@@ -150,7 +156,47 @@ public abstract class Program {
 		return lambda;
 	}
 
+	public double alpha() {
+		if (alpha <= 0.05)
+			return 0.1;
+		alpha -= 0.001;
+		return alpha;
+	}
+
 	public void printCentra() {
 		neurons.forEach(System.out::println);
+	}
+
+	protected void checkDistanceToPoint(double[] point) {
+		distance.clear();
+		for (int i = 0; i < neurons.size(); i++) {
+			Vector<Double> V = new Vector<Double>();
+			V.add(0, neurons.get(i).checkDistance(point));
+			V.add(1, (double) i);
+			distance.add(V);
+		}
+		distance.sort(new Comparator<Vector<Double>>() {
+			@Override
+			public int compare(Vector<Double> o1, Vector<Double> o2) {
+				return o1.get(0).compareTo(o2.get(0));
+			}
+		});
+	}
+
+	public void saveError() {
+		File file = new File("error.txt");
+		PrintWriter out = null;
+		try {
+			file.createNewFile();
+			out = new PrintWriter(new FileWriter(file));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		for (Double e : errors) {
+			out.println(e);
+		}
+
+		out.close();
 	}
 }

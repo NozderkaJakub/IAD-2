@@ -15,8 +15,8 @@ public class WTA extends Program {
 		Vector<Double> vector = new Vector<Double>();
 		vector.add((point[0] - neurons.get(kx).weight.get(0))); // x - cxj
 		vector.add((point[1] - neurons.get(kx).weight.get(1))); // y - cyj
-		V.add((neurons.get(kx).weight.get(0) + (alpha * vector.get(0))));
-		V.add((neurons.get(kx).weight.get(1) + (alpha * vector.get(1))));
+		V.add((neurons.get(kx).weight.get(0) + (alpha() * vector.get(0))));
+		V.add((neurons.get(kx).weight.get(1) + (alpha() * vector.get(1))));
 		neurons.get(kx).setXY(V);
 	}
 }

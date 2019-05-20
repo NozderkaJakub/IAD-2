@@ -21,8 +21,8 @@ public class WTM extends Program {
 			Vector<Double> vector = new Vector<Double>();
 			vector.add( (point[0] - neurons.get(i).weight.get(0)) );
 			vector.add( (point[1] - neurons.get(i).weight.get(1)) );
-			V.add( (neurons.get(i).weight.get(0) + (alpha * theta(kx, i) * vector.get(0))) );
-			V.add( (neurons.get(i).weight.get(1) + (alpha * theta(kx, i) * vector.get(1))) );
+			V.add( (neurons.get(i).weight.get(0) + (alpha() * theta(kx, i) * vector.get(0))) );
+			V.add( (neurons.get(i).weight.get(1) + (alpha() * theta(kx, i) * vector.get(1))) );
 			neurons.get(i).setXY(V);
 		}
 	}
