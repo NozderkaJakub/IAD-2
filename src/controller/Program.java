@@ -18,11 +18,13 @@ public abstract class Program {
 	public List<Neuron> neurons;
 	protected double alpha;
 	protected int shuffle;
+	protected double lambda;
 
 	public Program(int radius, int centerX, int centerY, int noOfCenters, int noOfPoints) throws IOException {
 		points = new double[200][2];
 		neurons = new ArrayList<Neuron>();
 		alpha = 0.1;
+		lambda = 3.0;
 		shuffle = ThreadLocalRandom.current().nextInt(0, 200);
 		generateRandomPointsInCircle(radius, centerX, centerY, noOfPoints);
 		savePoints();
@@ -39,6 +41,7 @@ public abstract class Program {
 
 		do{
 			oldError = error;
+			error += quantisationError(points[shuffle]);
 			error = 0;
 			for (int i = 0; i < points.length; i++) {
 				int centro = 0;
@@ -59,7 +62,7 @@ public abstract class Program {
 							centro = j + 1;
 					}
 				}
-				error += quantisationError(points[shuffle]);
+				
 				changeCenterCoords(points[shuffle], centro);
 				printCentra();
 			}
@@ -139,6 +142,12 @@ public abstract class Program {
 			sum += neurons.get(i).checkDistance(point);
 		}
 		return sum / neurons.size();
+	}
+	public double lambda() {
+		if (lambda <= 0.1003)
+			return 0.1;
+		lambda -= 0.0003;
+		return lambda;
 	}
 
 	public void printCentra() {

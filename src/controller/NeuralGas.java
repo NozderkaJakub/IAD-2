@@ -5,12 +5,10 @@ import java.util.Comparator;
 import java.util.Vector;
 
 public class NeuralGas extends Program {
-	private double lambda;
 	private Vector<Vector<Double>> distance;
 
 	public NeuralGas(int radius, int centerX, int centerY, int noOfCenters, int noOfPoints) throws IOException {
 		super(radius, centerX, centerY, noOfCenters, noOfPoints);
-		lambda = 3.0;
 		distance = new Vector<Vector<Double>>();
 	}
 
@@ -18,12 +16,7 @@ public class NeuralGas extends Program {
 		return Math.exp(-(t / lambda()));
 	}
 
-	private double lambda() {
-		if (lambda <= 0.1003)
-			return 0.1;
-		lambda -= 0.0003;
-		return lambda;
-	}
+
 
 	@Override
 	protected void changeCenterCoords(double[] point, int kx) {
