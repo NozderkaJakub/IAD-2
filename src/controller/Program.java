@@ -19,7 +19,7 @@ public abstract class Program {
 	protected double alpha;
 	protected int shuffle;
 	protected double lambda;
-	protected Vector<Vector<Double>> distance;
+	static protected Vector<Vector<Double>> distance;
 	protected Vector<Double> errors;
 
 	public Program(int radius, int centerX, int centerY, int noOfCenters, int noOfPoints) throws IOException {
@@ -198,5 +198,11 @@ public abstract class Program {
 		}
 
 		out.close();
+	}
+	public int checkOrder(int t) {
+		for (int i = 0; i < distance.size(); i++) {
+			if((double) t == distance.get(i).get(1)) return i;
+		}
+		return 0;
 	}
 }

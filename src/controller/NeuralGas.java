@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.util.Vector;
 
 public class NeuralGas extends Program {
-	private Vector<Vector<Double>> distance;
 
+	
+	
 	public NeuralGas(int radius, int centerX, int centerY, int noOfCenters, int noOfPoints) throws IOException {
 		super(radius, centerX, centerY, noOfCenters, noOfPoints);
-		distance = new Vector<Vector<Double>>();
 	}
+
+
 
 	private double eFunction(int t) {
 		return Math.exp(-(t / lambda()));
@@ -32,10 +34,5 @@ public class NeuralGas extends Program {
 
 	}
 	
-	private int checkOrder(int t) {
-		for (int i = 0; i < distance.size(); i++) {
-			if((double) t == distance.get(i).get(1)) return i;
-		}
-		return 0;
-	}
+
 }
