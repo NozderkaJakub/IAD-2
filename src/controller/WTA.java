@@ -4,9 +4,28 @@ import java.io.IOException;
 import java.util.Vector;
 
 public class WTA extends Program {
+	
 
-	public WTA(int radius, int centerX, int centerY, int noOfCenters, int noOfPoints) throws IOException {
-		super(radius, centerX, centerY, noOfCenters, noOfPoints);
+	public WTA(double lengthOfHorizontalSide, double lengthOfVerticalSide, double centerOfRectangleX,
+			double centerOfRectangleY, int noOfPoints, int noOfCenters, String typeOfGeneratingCenters)
+			throws IOException {
+		super(lengthOfHorizontalSide, lengthOfVerticalSide, centerOfRectangleX, centerOfRectangleY, noOfPoints, noOfCenters,
+				typeOfGeneratingCenters);
+	}
+
+	public WTA(double radius, double centerX, double centerY, int noOfPoints, int noOfCenters,
+			String typeOfGeneratingCenters) throws IOException {
+		super(radius, centerX, centerY, noOfPoints, noOfCenters, typeOfGeneratingCenters);
+	}
+
+	public WTA(double height, int noOfPoints, double positiveX1, double positiveX2, int noOfCenters,
+			String typeOfGeneratingCenters) throws IOException {
+		super(height, noOfPoints, positiveX1, positiveX2, noOfCenters, typeOfGeneratingCenters);
+	}
+
+	public WTA(int noOfPoints, double lengthOfSide, double centerOfSquareX, double centerOfSquareY, int noOfCenters,
+			String typeOfGeneratingCenters) throws IOException {
+		super(noOfPoints, lengthOfSide, centerOfSquareX, centerOfSquareY, noOfCenters, typeOfGeneratingCenters);
 	}
 
 	@Override
